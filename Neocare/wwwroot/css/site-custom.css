@@ -1,0 +1,32 @@
+body {
+    background: #fff;
+}
+
+.navbar, .footer {
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    color: #fff;
+}
+
+.navbar .nav-link, .navbar-brand {
+    color: #fff !important;
+}
+
+.navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+    color: #e0e7ff !important;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    border: none;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+}
+
+.table thead {
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+    color: #fff;
+}

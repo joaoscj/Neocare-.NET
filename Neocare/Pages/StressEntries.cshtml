@@ -1,0 +1,40 @@
+@page
+@model Neocare.Pages.StressEntriesModel
+@{
+    ViewData["Title"] = "Registros de Estresse";
+}
+
+<h1>Registros de Estresse</h1>
+
+<p>
+    <a class="btn btn-primary" asp-page="./CreateStressEntry">Novo Registro</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Nível de Estresse</th>
+            <th>Descrição</th>
+            <th>Sintomas</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.StressEntries)
+        {
+            <tr>
+                <td>@entry.RecordedAt.ToLocalTime().ToString("g")</td>
+                <td>@entry.StressLevel</td>
+                <td>@entry.Description</td>
+                <td>@string.Join(", ", entry.Symptoms)</td>
+                <td>
+                    <a asp-page="./EditStressEntry" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Editar</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@entry.Id" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este registro?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
