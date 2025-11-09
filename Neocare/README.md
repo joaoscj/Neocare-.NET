@@ -1,5 +1,11 @@
 # NeoCare 
 
+# Alunos
+
+Davi Praxedes Santos Silva - 560719
+João dos Santos Cardoso de Jesus - 560400
+Kauê Vinicius Samartino da Silva - 559317
+
 Um sistema simples e intuitivo para acompanhar seus níveis de estresse diários.
 
 ### O que você precisa ter instalado
