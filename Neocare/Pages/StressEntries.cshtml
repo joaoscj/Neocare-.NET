@@ -4,37 +4,151 @@
     ViewData["Title"] = "Registros de Estresse";
 }
 
-<h1>Registros de Estresse</h1>
+<div class="container">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
 
-<p>
-    <a class="btn btn-primary" asp-page="./CreateStressEntry">Novo Registro</a>
-</p>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Data</th>
-            <th>Nível de Estresse</th>
-            <th>Descrição</th>
-            <th>Sintomas</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var entry in Model.StressEntries)
-        {
-            <tr>
-                <td>@entry.RecordedAt.ToLocalTime().ToString("g")</td>
-                <td>@entry.StressLevel</td>
-                <td>@entry.Description</td>
-                <td>@string.Join(", ", entry.Symptoms)</td>
-                <td>
-                    <a asp-page="./EditStressEntry" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Editar</a>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@entry.Id" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este registro?')">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Pesquisar</label>
+                    <input type="text" class="form-control" asp-for="SearchTerm" placeholder="Buscar por descrição ou sintomas...">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Nível Mínimo</label>
+                    <input type="number" class="form-control" asp-for="MinStressLevel" min="1" max="10">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Nível Máximo</label>
+                    <input type="number" class="form-control" asp-for="MaxStressLevel" min="1" max="10">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Data Inicial</label>
+                    <input type="date" class="form-control" asp-for="FromDate">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Data Final</label>
+                    <input type="date" class="form-control" asp-for="ToDate">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Ordenar por</label>
+                    <select asp-for="SortBy" class="form-select">
+                        <option value="date">Data</option>
+                        <option value="level">Nível de Estresse</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Direção</label>
+                    <select asp-for="SortDirection" class="form-select">
+                        <option value="desc">Decrescente</option>
+                        <option value="asc">Crescente</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Itens por página</label>
+                    <select asp-for="PageSize" class="form-select">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary d-block">Aplicar Filtros</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nível de Estresse</th>
+                    <th>Descrição</th>
+                    <th>Sintomas</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Model.SearchResult.Items)
+                {
+                    <tr>
+                        <td>@entry.RecordedAt.ToString("g")</td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar @(entry.StressLevel > 7 ? "bg-danger" : entry.StressLevel > 4 ? "bg-warning" : "bg-success")"
+                                    role="progressbar"
+                                    style="width: @(entry.StressLevel * 10)%">
+                                    @entry.StressLevel
+                                </div>
+                            </div>
+                        </td>
+                        <td>@entry.Description</td>
+                        <td>@string.Join(", ", entry.Symptoms)</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@entry.Id" onsubmit="return confirm('Tem certeza que deseja excluir este registro?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.SearchResult.TotalPages > 1)
+    {
+        <nav aria-label="Navegação de página">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.GetPageUrl(1)">Primeira</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.GetPageUrl(Model.CurrentPage - 1)">Anterior</a>
+                    </li>
+                }
+
+                @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.SearchResult.TotalPages, Model.CurrentPage + 2); i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Model.GetPageUrl(i)">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.SearchResult.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.GetPageUrl(Model.CurrentPage + 1)">Próxima</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.GetPageUrl(Model.SearchResult.TotalPages)">Última</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

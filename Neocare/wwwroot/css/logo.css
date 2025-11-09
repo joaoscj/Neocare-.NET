@@ -1,0 +1,10 @@
+.logo-neocare {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-image: url('../images/logo neocare.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    margin-right: 12px;
+}
