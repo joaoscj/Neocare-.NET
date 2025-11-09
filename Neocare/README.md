@@ -3,12 +3,14 @@
 # Alunos
 
 Davi Praxedes Santos Silva - 560719
-João dos Santos Cardoso de Jesus - 560400
-Kauê Vinicius Samartino da Silva - 559317
 
-Um sistema simples e intuitivo para acompanhar seus níveis de estresse diários.
+JoÃ£o dos Santos Cardoso de Jesus - 560400
 
-### O que você precisa ter instalado
+KauÃª Vinicius Samartino da Silva - 559317
+
+Um sistema simples e intuitivo para acompanhar seus nÃ­veis de estresse diÃ¡rios.
+
+### O que vocÃª precisa ter instalado
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - Visual Studio 2022 ou VS Code
@@ -17,7 +19,7 @@ Um sistema simples e intuitivo para acompanhar seus níveis de estresse diários.
 
 #### Usando Visual Studio 2022
 1. Abra o arquivo `Neocare.sln`
-2. Aperte F5 ou o botão de "Iniciar Depuração"
+2. Aperte F5 ou o botÃ£o de "Iniciar DepuraÃ§Ã£o"
 
 #### Usando VS Code ou Terminal
 1. Abra o terminal na pasta do projeto
